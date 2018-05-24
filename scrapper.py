@@ -17,7 +17,7 @@ class htmlScrapper():
 		self.polish_values()
 
 	def scrape(self):
-		res = req.get('https://roll20.net/compendium/dnd5e/Aboleth?fromList=Aboleth&Name=&Speed=#content')
+		res = req.get('https://roll20.net/compendium/dnd5e/Monsters:Acolyte?order=0#content')
 		soup = bs.BeautifulSoup(res.text, 'lxml')
 		temp = soup.find("h1", class_ = "page-title")
 		self.name = str(temp.text)	
@@ -25,7 +25,7 @@ class htmlScrapper():
 		self.attributeNames = soup.find_all("div", class_ = "col-md-3 attrName")
 
 	def polish_values(self):
-		print("polishing")
+		#print("polishing")
 		polishedValues = []
 		polishedNames = []
 		for i in range(len(self.attributeNames)):
@@ -37,11 +37,11 @@ class htmlScrapper():
 		self.attributeNames = polishedNames
 		self.attributeValues = polishedValues
 		self.strip_whitespace()
-		print("Name:"+ self.name)
-		print("_______________________________________________")
-		for i in range(len(self.attributeValues)):
-			print(self.attributeNames[i]+": "+self.attributeValues[i])
-			print("_____________________________________________________")
+		#print("Name:"+ self.name)
+		#print("_______________________________________________")
+		#for i in range(len(self.attributeValues)):
+			#print(self.attributeNames[i]+": "+self.attributeValues[i])
+			#print("_____________________________________________________")
 		return
 
 	def strip_whitespace(self):

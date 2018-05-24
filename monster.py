@@ -1,14 +1,10 @@
 import scrapper
 
-class action:
-	def __init__(self, blockDescription)
-		self.descrption = {}
-
 class monster:
 	def __init__(self):
 		self.name = ""
 		self.AC = 0 
-		self.actions = ""
+		self.actions = [] 
 		self.alignment = ""
 		self.type = ""
 		self.attributes = []
@@ -54,22 +50,45 @@ class monster:
 				temp = values[position]
 				self.actions = temp
 			position += 1
-		print("Actions are: "+ str(self.actions))
+		self.actions = self.format_actions(temp)
+		print("Actions: ")
+		for dictionary in self.actions:
+			print("\t"+dictionary["Name"])
 		return
-	def format_actions(self,stringAction)#actions is a string "[{...},{...},etc]"
-		action_list = []
-		action = {}
-		sub_action = ""
-		found = False
-		 for char in actions:
-			if char == "]":
-				return action_list
-			if char == "}":
-				action_list.append(action)
-			if char == "{":
 
-	#returns a list of actions, actions are a dictionary
+	def format_actions(self,stringAction):#actions is a string "[{...},{...},etc]"
+		action_list = self.split_actions(stringAction)
+		return self.action_dictionary(action_list)
+
  
+	def action_dictionary(self, action):
+		action_list = []
+		temp = {}
+		for act in action:
+			part1, part2 = act.split(':')
+			if part1 == 'Name':
+				if temp:#if the dictionary has something append it to the list and then reset the dicitonary
+					action_list.append(temp)
+				temp = {}
+			temp[part1] = part2
+		action_list.append(temp)#catches the last dictionary
+		return action_list
+	
+	def split_actions(self, stringAction):
+		paired = 0
+		temp = ""
+		for char in stringAction:
+			if char == "\"":
+				paired+=1
+				char = ""
+			if char == "[" or char =="]" or char == '{' or char == '}':
+				char = ""
+			if paired > 1:
+				paired = 0
+			if char == "," and paired == 1:
+				char = "*"#using * as a temporary comma so later on it can be changed back to a comma easily
+			temp = temp+char
+		return temp.split(',')	
 
 	def set_traits(self, traits):
 		return 
