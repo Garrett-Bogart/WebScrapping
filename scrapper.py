@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class htmlScrapper():
 	def __init__(self):
+		self.name = ""
 		self.attributeNames = []
 		self.attributeValues = []
 
@@ -16,11 +17,10 @@ class htmlScrapper():
 		self.polish_values()
 
 	def scrape(self):
-		res = req.get('https://roll20.net/compendium/dnd5e/Monsters:Acolyte?order=0#content')
+		res = req.get('https://roll20.net/compendium/dnd5e/Aboleth?fromList=Aboleth&Name=&Speed=#content')
 		soup = bs.BeautifulSoup(res.text, 'lxml')
-		#words = soup.find_all(id = "pagecontent")
-		#print(words[0].text)
-		textarea = soup.find_all("textarea")
+		temp = soup.find("h1", class_ = "page-title")
+		self.name = str(temp.text)	
 		self.attributeValues = soup.find_all("div", class_ = "col-md-7 attrValue")
 		self.attributeNames = soup.find_all("div", class_ = "col-md-3 attrName")
 
@@ -37,6 +37,8 @@ class htmlScrapper():
 		self.attributeNames = polishedNames
 		self.attributeValues = polishedValues
 		self.strip_whitespace()
+		print("Name:"+ self.name)
+		print("_______________________________________________")
 		for i in range(len(self.attributeValues)):
 			print(self.attributeNames[i]+": "+self.attributeValues[i])
 			print("_____________________________________________________")
@@ -63,6 +65,6 @@ class javascriptScrapper():
 		finally:
 			driver.quit()
 
-s = htmlScrapper()
-s.start_scrape()
+#s = htmlScrapper()
+#s.start_scrape()
 
