@@ -51,10 +51,20 @@ class monster:
 				self.actions = temp
 			position += 1
 		self.actions = self.format_actions(temp)
+		self.print_action()
+		return
+
+	def print_action(self):
 		print("Actions: ")
 		for dictionary in self.actions:
-			print("\t"+dictionary["Name"])
-		return
+			print("\t"+dictionary["Name"])	
+			temp = []
+			for thing in dictionary:
+				temp.append(thing)
+			for thing in temp:
+				if thing != "Name":
+					print("\t\t"+thing+": "+dictionary[thing])
+		return	
 
 	def format_actions(self,stringAction):#actions is a string "[{...},{...},etc]"
 		action_list = self.split_actions(stringAction)
