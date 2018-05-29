@@ -23,9 +23,13 @@ class monster:
 		self.legenday_actions = {}
 	
 	def set_values(self, name, labels, values):
+		#print(labels)
 		self.set_name(name)
 		self.set_AC(labels,values)
 		self.set_actions(labels, values)
+		self.set_alignment(labels, values)
+		self.set_type(labels, values)
+		self.set_attributes(labels,values)
 		return 	
 
 	def set_name(self, name):
@@ -100,14 +104,66 @@ class monster:
 			temp = temp+char
 		return temp.split(',')	
 
+	def set_alignment(self,labels,values):
+		position = 0
+		temp = ""
+		for label in labels:
+			if label == "Alignment":
+				temp = values[position]
+				self.alignment = temp
+			position += 1
+		print(self.alignment)
+		return
+
+	def set_type(self,labels,values):
+		position = 0
+		temp = ""
+		for label in labels:
+			if label == "Type":
+				temp = values[position]
+				self.alignment = temp
+			position += 1
+		print(temp)
+		return
+
+	def set_attributes(self,labels,values):
+		print(labels)
+		position = 0
+		strength = ""
+		constitution = ""
+		intelligence = ""
+		wisdom = ""
+		dexterity = ""
+		charisma = ""
+		for label in labels:
+			if label == "STR":
+				strength = int(values[position])
+			if label == "DEX":
+				dexterity = int(values[position])
+			if label == "CON":
+				constitution = int(values[position])
+			if label == "INT":
+				intelligence = int(values[position])
+			if label == "WIS":
+				wisdom = int(values[position])
+			if label =="CHA":
+				charisma = int(values[position])
+			position += 1
+		self.attributes.append(strength)
+		self.attributes.append(dexterity)
+		self.attributes.append(constitution)
+		self.attributes.append(intelligence)
+		self.attributes.append(wisdom)
+		self.attributes.append(charisma)
+		print(self.attributes)
+		return
+
 	def set_traits(self, traits):
 		return 
 	
 	def set_legendary_actions(self, actions):
 		return
 
-	def set_attributes(self, attrb):
-		return
 
 s = scrapper.htmlScrapper()
 s.start_scrape()
