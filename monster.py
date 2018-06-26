@@ -7,7 +7,7 @@ class monster:
 		self.actions = [] 
 		self.alignment = ""
 		self.type = ""
-		self.attributes = []
+		self.attributes ={} 
 		self.challange_rating = 0
 		self.hp = ""# ex 135(18d10+36)
 		self.languages = ""
@@ -26,6 +26,8 @@ class monster:
 		self.set_name(name)
 		self.set_AC(labels,values)
 		self.set_actions(labels, values)
+		self.set_alignment(labels,values)
+		self.set_attributes(labels,values)
 		return 	
 
 	def set_name(self, name):
@@ -100,14 +102,35 @@ class monster:
 			temp = temp+char
 		return temp.split(',')	
 
+	def set_alignment(self, labels, values):
+		position = 0
+		temp = ""
+		for label in labels:
+			if label == "Alignment":
+				temp =values[position]
+				self.alignment = temp
+			position += 1
+		print("alignment is: "+ str(self.alignment))
+
+	def set_attributes(self,labels,values):	
+		position = 0
+		temp = ""
+		attrb = ["CHA","CON","DEX","INT","STR","WIS"]
+		for label in labels:
+			for att in attrb:
+				if label == att:
+					temp =values[position]
+					self.attributes[att]=temp
+			position += 1
+		print(self.attributes)
+
+
 	def set_traits(self, traits):
 		return 
 	
 	def set_legendary_actions(self, actions):
 		return
 
-	def set_attributes(self, attrb):
-		return
 
 s = scrapper.htmlScrapper()
 s.start_scrape()
