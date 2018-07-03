@@ -7,7 +7,7 @@ class monster:
 		self.actions = [] 
 		self.alignment = ""
 		self.type = ""
-		self.attributes = []
+		self.attributes ={} 
 		self.challange_rating = 0
 		self.hp = ""# ex 135(18d10+36)
 		self.languages = ""
@@ -157,6 +157,8 @@ class monster:
 		self.attributes.append(charisma)
 		print(self.attributes)
 		return
+
+
 
 	def set_traits(self, traits):
 		return 
