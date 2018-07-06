@@ -129,32 +129,20 @@ class monster:
 	def set_attributes(self,labels,values):
 		print(labels)
 		position = 0
-		strength = ""
-		constitution = ""
-		intelligence = ""
-		wisdom = ""
-		dexterity = ""
-		charisma = ""
 		for label in labels:
 			if label == "STR":
-				strength = int(values[position])
+				self.attributes["STR"] = int(values[position])
 			if label == "DEX":
-				dexterity = int(values[position])
+				self.attributes["DEX"] = int(values[position])
 			if label == "CON":
-				constitution = int(values[position])
+				self.attributes["CON"] = int(values[position])
 			if label == "INT":
-				intelligence = int(values[position])
+				self.attributes["INT"] = int(values[position])
 			if label == "WIS":
-				wisdom = int(values[position])
+				self.attributes["WIS"] = int(values[position])
 			if label =="CHA":
-				charisma = int(values[position])
+				self.attributes["CHA"] = int(values[position])
 			position += 1
-		self.attributes.append(strength)
-		self.attributes.append(dexterity)
-		self.attributes.append(constitution)
-		self.attributes.append(intelligence)
-		self.attributes.append(wisdom)
-		self.attributes.append(charisma)
 		print(self.attributes)
 		return
 
