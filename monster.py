@@ -12,16 +12,16 @@ class monster:
 		self.hp = ""# ex 135(18d10+36)
 		self.languages = ""
 		self.passivePerception = 0
-		self.attacks = {}	
+		self.attacks = {}#determined by actions, look for multiattack	
 		self.saving_throws = {} 
 		self.senses = ""	
 		self.size = ""
 		self.skills = {}
-		self.speed = {}
-		self.traits = {}
+		self.speed = "" 
+		self.traits = ""
 		self.type = ""
-		self.legenday_actions = {}
-	
+		self.legendary_actions ="" 
+
 	def set_values(self, name, labels, values):
 		#print(labels)
 		self.set_name(name)
@@ -30,6 +30,19 @@ class monster:
 		self.set_alignment(labels, values)
 		self.set_type(labels, values)
 		self.set_attributes(labels,values)
+		self.set_challenge_rating(labels, values)
+		self.set_hp(labels,values)
+		self.set_languages(labels,values)
+		self.set_passive_perception(labels, values)
+		#self.set_attacks(labels,values)
+		self.set_saving_throws(labels, values)
+		self.set_senses(labels, values)
+		self.set_size(labels, values)
+		self.set_skills(labels,values)
+		self.set_speed(labels,values)
+		self.set_traits(labels,values)
+		self.set_type(labels,values)
+		self.set_legendary_actions(labels, values)
 		return 	
 
 	def set_name(self, name):
@@ -146,13 +159,117 @@ class monster:
 		print(self.attributes)
 		return
 
+	def set_challenge_rating(self,labels,values):
+		position = 0
+		for label in labels:
+			if label =="Challenge Rating":
+				self.challange_rating = values[position]
+			position +=1
+		print(self.challange_rating)
 
+	def set_hp(self,labels,values):
+		position = 0
+		for label in labels:
+			if label == "HP":
+				self.hp = values[position]
+			position+=1
+		print("hp:"+str(self.hp))	
 
-	def set_traits(self, traits):
-		return 
+	def set_languages(self,labels,values):#need to add in language selection function
+		position = 0
+		for label in labels:
+			if label == "Languages":
+				self.languages = values[position]
+			position+=1
+		print("langauges: "+self.languages)
+
+	def set_passive_perception(self,labels,values):
+		position = 0
+		for label in labels:
+			if label == "Passive Perception":
+				self.passivePerception = values[position]
+			position+=1
+		print("passive perception: "+str(self.passivePerception))
+
+	def set_attacks(self,labels,values):
+		position = 0
+		for label in labels:
+			if label == "Attacks":
+				print(values[position])
+				self.attacks["Attacks"] = values[position]
+			position+=1
+		print(self.attacks)
+
+	def set_saving_throws(self, labels, values):
+		position = 0
+		for label in labels:
+			if label == "Saving Throws":
+				temp = values[position].split(",")
+				for thing in temp:
+					parts = thing.split("+")
+					self.saving_throws[parts[0].replace(" ","")] = int(parts[1])
+			position += 1
+		print(self.saving_throws)
+
+	def set_senses(self,labels, values):
+		position = 0
+		for label in labels:
+			if label =="Senses":
+				self.senses = values[position]
+			position += 1
+		print("senses: "+self.senses) 
+
+	def set_size(self, labels, values):
+		position = 0
+		for label in labels:
+			if label == "Size":
+				self.size = values[position]
+			position += 1
+		print("size: "+ self.size)
+
+	def set_skills(self, labels, values):
+		position = 0
+		for label in labels:
+			if label == "Skills":
+				temp = values[position].split(",")
+				for thing in temp:
+					parts = thing.split("+")
+					self.skills[parts[0].replace(" ","")] = int(parts[1])
+			position += 1
+		print(self.skills)
+
+	def set_speed(self, labels, values):# needs formating
+		position = 0
+		for label in labels:
+			if label == "Speed":
+				self.speed = values[position]
+			position += 1
+		print("speed: "+ self.speed)
 	
-	def set_legendary_actions(self, actions):
-		return
+
+	def set_traits(self, labels, values):
+		position = 0
+		for label in labels:
+			if label == "Traits":
+				self.traits = values[position]
+			position+=1
+		print(self.traits)
+	
+	def set_type(self, labels, values):
+		position = 0
+		for label in labels:
+			if label == "Type":
+				self.type = values[position]
+			position+=1
+		print(self.type)
+
+	def set_legendary_actions(self, labels, values):
+		position = 0
+		for label in labels:
+			if label == "Legendary Actions":
+				self.legendary_actions = values[position]
+			position += 1
+		print(self.legendary_actions)
 
 
 s = scrapper.htmlScrapper()
