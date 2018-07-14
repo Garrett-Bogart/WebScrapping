@@ -250,11 +250,12 @@ class monster:
 		temp = ""
 		for label in labels:
 			if label == "Traits":
-				self.traits = values[position]
+			#	self.traits = values[position]
 				temp = values[position]
 			position+=1
-		self.traits = self.format_actions(temp)
-		self.print_action(self.traits, "Traits: ")
+		print(temp)
+		#self.traits = self.format_actions(temp)
+		#self.print_action(self.traits, "Traits: ")
 	
 	def set_type(self, labels, values):
 		position = 0
@@ -270,10 +271,11 @@ class monster:
 		for label in labels:
 			if label == "Legendary Actions":
 				temp = values[position]
-				self.legendary_actions = values[position]
+			#	self.legendary_actions = values[position]
 			position += 1
-		self.legendary_actions = self.format_actions(temp)
-		self.print_action(self.legendary_actions, "Legendary Actions: ")
+		print(temp)
+		#self.legendary_actions = self.format_actions(temp)
+		#self.print_action(self.legendary_actions, "Legendary Actions: ")
 
 s = scrapper.htmlScrapper()
 s.start_scrape()

@@ -17,7 +17,9 @@ class htmlScrapper():
 		self.polish_values()
 
 	def scrape(self):
-		res = req.get('https://roll20.net/compendium/dnd5e/Aboleth?fromList=Aboleth&Name=&Speed=#content')
+		#https://roll20.net/compendium/dnd5e/Archmage?fromList=Archmage&Name=&Speed=#content
+		res = req.get('https://roll20.net/compendium/dnd5e/Archmage?fromList=Archmage&Name=&Speed=#content')
+		#res = req.get('https://roll20.net/compendium/dnd5e/Aboleth?fromList=Aboleth&Name=&Speed=#content')
 		soup = bs.BeautifulSoup(res.text, 'lxml')
 		temp = soup.find("h1", class_ = "page-title")
 		self.name = str(temp.text)	
