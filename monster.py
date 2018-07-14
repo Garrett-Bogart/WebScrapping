@@ -68,12 +68,11 @@ class monster:
 				self.actions = temp
 			position += 1
 		self.actions = self.format_actions(temp)
-		self.print_action()
-		return
+		self.print_action(self.actions, "Actions: ")
 
-	def print_action(self):
-		print("Actions: ")
-		for dictionary in self.actions:
+	def print_action(self, printable, print_label):
+		print(print_label)
+		for dictionary in printable:
 			print("\t"+dictionary["Name"])	
 			temp = []
 			for thing in dictionary:
@@ -81,7 +80,6 @@ class monster:
 			for thing in temp:
 				if thing != "Name":
 					print("\t\t"+thing+": "+dictionary[thing])
-		return	
 
 	def format_actions(self,stringAction):#actions is a string "[{...},{...},etc]"
 		action_list = self.split_actions(stringAction)
@@ -249,11 +247,14 @@ class monster:
 
 	def set_traits(self, labels, values):
 		position = 0
+		temp = ""
 		for label in labels:
 			if label == "Traits":
 				self.traits = values[position]
+				temp = values[position]
 			position+=1
-		print(self.traits)
+		self.traits = self.format_actions(temp)
+		self.print_action(self.traits, "Traits: ")
 	
 	def set_type(self, labels, values):
 		position = 0
@@ -265,12 +266,14 @@ class monster:
 
 	def set_legendary_actions(self, labels, values):
 		position = 0
+		temp = ""
 		for label in labels:
 			if label == "Legendary Actions":
+				temp = values[position]
 				self.legendary_actions = values[position]
 			position += 1
-		print(self.legendary_actions)
-
+		self.legendary_actions = self.format_actions(temp)
+		self.print_action(self.legendary_actions, "Legendary Actions: ")
 
 s = scrapper.htmlScrapper()
 s.start_scrape()
