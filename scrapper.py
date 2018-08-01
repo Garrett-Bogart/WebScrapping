@@ -12,17 +12,15 @@ class htmlScrapper():
 		self.attributeNames = []
 		self.attributeValues = []
 
-	def start_scrape(self):
-		self.scrape()
+	def start_scrape(self, link):
+		self.scrape(link)
 		self.polish_values()
 
-	def scrape(self):
-		#https://roll20.net/compendium/dnd5e/Archmage?fromList=Archmage&Name=&Speed=#content
-		res = req.get('https://roll20.net/compendium/dnd5e/Archmage?fromList=Archmage&Name=&Speed=#content')
-		#res = req.get('https://roll20.net/compendium/dnd5e/Aboleth?fromList=Aboleth&Name=&Speed=#content')
+	def scrape(self,link):
+		res = req.get(link)
 		soup = bs.BeautifulSoup(res.text, 'lxml')
 		temp = soup.find("h1", class_ = "page-title")
-		self.name = str(temp.text)	
+		self.name = temp.text	
 		self.attributeValues = soup.find_all("div", class_ = "col-md-7 attrValue")
 		self.attributeNames = soup.find_all("div", class_ = "col-md-3 attrName")
 
@@ -56,17 +54,38 @@ class htmlScrapper():
 
 class javascriptScrapper():
 
+	def __init__(self):
+		self.footer= re.compile(r'Acknowledgements|5th Edition SRD|View All Rules .|Terms of Service & Privacy Policy|DMCA|Visit our FAQ.|Home|Menu|Rules')
+		self.whiteSpace = re.compile(r'[^\s]')
+		self.links = []
+		self.names = []
 	def scrape(self):
 		driver = webdriver.Firefox()
 		driver.get('https://roll20.net/compendium/dnd5e/Monsters List#content')
 		try:
-			WebDriverWait(driver,10)
+			WebDriverWait(driver,5)
 			headers = driver.find_elements_by_tag_name('a')
 			for head in headers:
-				print(head.text)
+				if re.match(self.footer,head.text)== None and re.match(self.whiteSpace, head.text) != None:
+					self.names.append(head.text)
+					continue
+		#	print("names gathered")
+		#	print(self.names)
+			self.link_maker()
+		#	print("links made")
+		#	print(len(self.links))
 		finally:
 			driver.quit()
 
+	def link_maker(self):
+		print("making links")
+		for name in self.names:
+		#	print(type(name))
+			new = name.replace(" ",'%20')
+			self.links.append('https://roll20.net/compendium/dnd5e/'+new+'?fromList='+new+'&Name=&Speed=#content')
+
+#j = javascriptScrapper()
+#j.scrape()
 #s = htmlScrapper()
 #s.start_scrape()
 

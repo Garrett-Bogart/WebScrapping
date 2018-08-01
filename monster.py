@@ -1,4 +1,7 @@
 import scrapper
+import sys
+
+monster_guide =[]
 
 class monster:
 	def __init__(self):
@@ -23,7 +26,6 @@ class monster:
 		self.legendary_actions ="" 
 
 	def set_values(self, name, labels, values):
-		#print(labels)
 		self.set_name(name)
 		self.set_AC(labels,values)
 		self.set_actions(labels, values)
@@ -34,7 +36,7 @@ class monster:
 		self.set_hp(labels,values)
 		self.set_languages(labels,values)
 		self.set_passive_perception(labels, values)
-		#self.set_attacks(labels,values)
+		self.set_attacks(labels,values)
 		self.set_saving_throws(labels, values)
 		self.set_senses(labels, values)
 		self.set_size(labels, values)
@@ -57,7 +59,7 @@ class monster:
 				temp =values[position][0:2]
 				self.AC = int(temp)
 			position += 1
-		print("Monster AC is: "+ str(self.AC))
+		#print("Monster AC is: "+ str(self.AC))
 
 	def set_actions(self, labels, values):
 		position = 0
@@ -68,7 +70,7 @@ class monster:
 				self.actions = temp
 			position += 1
 		self.actions = self.format_actions(temp)
-		self.print_action(self.actions, "Actions: ")
+		#self.print_action(self.actions, "Actions: ")
 
 	def print_action(self, printable, print_label):
 		print(print_label)
@@ -123,7 +125,7 @@ class monster:
 				temp = values[position]
 				self.alignment = temp
 			position += 1
-		print(self.alignment)
+		#print(self.alignment)
 		return
 
 	def set_type(self,labels,values):
@@ -134,11 +136,11 @@ class monster:
 				temp = values[position]
 				self.alignment = temp
 			position += 1
-		print(temp)
+		#print(temp)
 		return
 
 	def set_attributes(self,labels,values):
-		print(labels)
+		#print(labels)
 		position = 0
 		for label in labels:
 			if label == "STR":
@@ -154,7 +156,7 @@ class monster:
 			if label =="CHA":
 				self.attributes["CHA"] = int(values[position])
 			position += 1
-		print(self.attributes)
+		#print(self.attributes)
 		return
 
 	def set_challenge_rating(self,labels,values):
@@ -163,7 +165,7 @@ class monster:
 			if label =="Challenge Rating":
 				self.challange_rating = values[position]
 			position +=1
-		print(self.challange_rating)
+		#print(self.challange_rating)
 
 	def set_hp(self,labels,values):
 		position = 0
@@ -171,7 +173,7 @@ class monster:
 			if label == "HP":
 				self.hp = values[position]
 			position+=1
-		print("hp:"+str(self.hp))	
+		#print("hp:"+str(self.hp))	
 
 	def set_languages(self,labels,values):#need to add in language selection function
 		position = 0
@@ -179,7 +181,7 @@ class monster:
 			if label == "Languages":
 				self.languages = values[position]
 			position+=1
-		print("langauges: "+self.languages)
+		#print("langauges: "+self.languages)
 
 	def set_passive_perception(self,labels,values):
 		position = 0
@@ -187,16 +189,16 @@ class monster:
 			if label == "Passive Perception":
 				self.passivePerception = values[position]
 			position+=1
-		print("passive perception: "+str(self.passivePerception))
+		#print("passive perception: "+str(self.passivePerception))
 
 	def set_attacks(self,labels,values):
 		position = 0
 		for label in labels:
 			if label == "Attacks":
-				print(values[position])
+				#print(values[position])
 				self.attacks["Attacks"] = values[position]
 			position+=1
-		print(self.attacks)
+		#print(self.attacks)
 
 	def set_saving_throws(self, labels, values):
 		position = 0
@@ -207,7 +209,7 @@ class monster:
 					parts = thing.split("+")
 					self.saving_throws[parts[0].replace(" ","")] = int(parts[1])
 			position += 1
-		print(self.saving_throws)
+		#print(self.saving_throws)
 
 	def set_senses(self,labels, values):
 		position = 0
@@ -215,7 +217,7 @@ class monster:
 			if label =="Senses":
 				self.senses = values[position]
 			position += 1
-		print("senses: "+self.senses) 
+		#print("senses: "+self.senses) 
 
 	def set_size(self, labels, values):
 		position = 0
@@ -223,7 +225,7 @@ class monster:
 			if label == "Size":
 				self.size = values[position]
 			position += 1
-		print("size: "+ self.size)
+		#print("size: "+ self.size)
 
 	def set_skills(self, labels, values):
 		position = 0
@@ -234,7 +236,7 @@ class monster:
 					parts = thing.split("+")
 					self.skills[parts[0].replace(" ","")] = int(parts[1])
 			position += 1
-		print(self.skills)
+		#print(self.skills)
 
 	def set_speed(self, labels, values):# needs formating
 		position = 0
@@ -242,7 +244,7 @@ class monster:
 			if label == "Speed":
 				self.speed = values[position]
 			position += 1
-		print("speed: "+ self.speed)
+		#print("speed: "+ self.speed)
 	
 
 	def set_traits(self, labels, values):
@@ -250,35 +252,42 @@ class monster:
 		temp = ""
 		for label in labels:
 			if label == "Traits":
-			#	self.traits = values[position]
+				self.traits = values[position]
 				temp = values[position]
+				self.traits = self.format_actions(temp)
+				#self.print_action(self.traits, "Traits: ")	
 			position+=1
-		print(temp)
-		#self.traits = self.format_actions(temp)
-		#self.print_action(self.traits, "Traits: ")
-	
+		
 	def set_type(self, labels, values):
 		position = 0
 		for label in labels:
 			if label == "Type":
 				self.type = values[position]
 			position+=1
-		print(self.type)
+		#print(self.type)
 
 	def set_legendary_actions(self, labels, values):
 		position = 0
 		temp = ""
 		for label in labels:
 			if label == "Legendary Actions":
-				temp = values[position]
-			#	self.legendary_actions = values[position]
-			position += 1
-		print(temp)
-		#self.legendary_actions = self.format_actions(temp)
-		#self.print_action(self.legendary_actions, "Legendary Actions: ")
+				self.legendary_actions = values[position]
+				self.legendary_actions = self.format_actions(self.legendary_actions)
+				#self.print_action(self.legendary_actions, "Legendary Actions: ")
+			position+=1
 
-s = scrapper.htmlScrapper()
-s.start_scrape()
-m = monster()
-m.set_values(s.name, s.attributeNames, s.attributeValues)
 
+j = scrapper.javascriptScrapper()
+j.scrape()
+print(len(j.links))
+for link in j.links:
+	try:
+		s = scrapper.htmlScrapper()
+		s.start_scrape(link)
+		m = monster()
+		m.set_values(s.name, s.attributeNames, s.attributeValues)
+		monster_guide.append(m)
+	except:
+		print(" ")
+
+print(len(monster_guide))
