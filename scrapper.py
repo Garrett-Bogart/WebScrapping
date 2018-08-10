@@ -63,17 +63,13 @@ class javascriptScrapper():
 		driver = webdriver.Firefox()
 		driver.get('https://roll20.net/compendium/dnd5e/Monsters List#content')
 		try:
-			WebDriverWait(driver,5)
+			#WebDriverWait(driver,5)
 			headers = driver.find_elements_by_tag_name('a')
 			for head in headers:
 				if re.match(self.footer,head.text)== None and re.match(self.whiteSpace, head.text) != None:
 					self.names.append(head.text)
 					continue
-		#	print("names gathered")
-		#	print(self.names)
 			self.link_maker()
-		#	print("links made")
-		#	print(len(self.links))
 		finally:
 			driver.quit()
 
@@ -82,7 +78,8 @@ class javascriptScrapper():
 		for name in self.names:
 		#	print(type(name))
 			new = name.replace(" ",'%20')
-			self.links.append('https://roll20.net/compendium/dnd5e/'+new+'?fromList='+new+'&Name=&Speed=#content')
+#https://roll20.net/compendium/dnd5e/Monsters:Aboleth/#h-Aboleth
+			self.links.append('https://roll20.net/compendium/dnd5e/Monsters:'+new+'/#h-'+new)
 
 #j = javascriptScrapper()
 #j.scrape()

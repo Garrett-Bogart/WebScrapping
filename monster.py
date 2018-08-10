@@ -1,7 +1,7 @@
 import scrapper
 import sys
+import pickle
 
-monster_guide =[]
 
 class monster:
 	def __init__(self):
@@ -45,7 +45,7 @@ class monster:
 		self.set_traits(labels,values)
 		self.set_type(labels,values)
 		self.set_legendary_actions(labels, values)
-		return 	
+	
 
 	def set_name(self, name):
 		print(name)
@@ -61,15 +61,82 @@ class monster:
 			position += 1
 		#print("Monster AC is: "+ str(self.AC))
 
-	def set_actions(self, labels, values):
+	def remove_braces(self, action_string):
+		removed_brace = action_string.replace("[","")
+		removed_brace = removed_brace.replace("]","")
+		removed_quotes = removed_brace.replace('"',"")
+		return removed_quotes
+
+	def single_actions(self, removed_brace):
+		actions = []
+		temp = ""
+		for char in removed_brace:
+			if char == "}":
+				actions.append(temp)
+				temp = ""
+			else:
+				if char == "{":
+					continue
+				temp += char
+		actions = self.remove_needless_commas(actions)
+		return actions
+	
+	def remove_needless_commas(self, actions):
+		temp = []
+		for action in actions:
+			if action[0] == ",":
+				temp.append(action.replace(",","",1))
+				continue
+			else:
+				temp.append(action)
+				continue
+		return temp
+
+	def repair_actions(self, action_parts):#occurs if action's description contain commas 
+		repaired_actions = []
+		for i in range(len(action_parts)):
+			temp= action_parts[i].split(':')
+			if len(temp) < 2:
+				size = len(repaired_actions)
+				patching = repaired_actions[size-1]+","+temp[0]
+				repaired_actions[size-1]=patching
+			else:
+				repaired_actions.append(action_parts[i])
+		return repaired_actions
+	
+	def break_actions_into_parts(self, actions):
+		formatted_actions = []# {name: desc, name: desc,....}
+		for action in actions:
+			temp = {}
+			action_parts = action.split(",")#problem if a ',' is in the desc
+			repaired_actions = self.repair_actions(action_parts)
+			for part in repaired_actions:
+				pieces = part.split(":")
+				name = pieces[0]
+				desc = pieces[1]
+				temp[name]=desc
+			formatted_actions.append(temp)
+		return formatted_actions
+		
+	def format_actions(self, action_string):
+		removed_brace = self.remove_braces(action_string)
+		actions = self.single_actions(removed_brace)
+		formatted_actions = self.break_actions_into_parts(actions)
+		return formatted_actions
+
+	def get_actions(self, labels, values):
 		position = 0
 		temp = ""
 		for label in labels:
 			if label == "Actions":
 				temp = values[position]
-				self.actions = temp
 			position += 1
-		self.actions = self.format_actions(temp)
+		return temp
+
+	def set_actions(self, labels, values):
+		#action_string = self.read_file()
+		action_string = self.get_actions(labels,values)
+		self.actions = self.format_actions(action_string)
 		#self.print_action(self.actions, "Actions: ")
 
 	def print_action(self, printable, print_label):
@@ -83,39 +150,6 @@ class monster:
 				if thing != "Name":
 					print("\t\t"+thing+": "+dictionary[thing])
 
-	def format_actions(self,stringAction):#actions is a string "[{...},{...},etc]"
-		action_list = self.split_actions(stringAction)
-		return self.action_dictionary(action_list)
-
- 
-	def action_dictionary(self, action):
-		action_list = []
-		temp = {}
-		for act in action:
-			part1, part2 = act.split(':')
-			if part1 == 'Name':
-				if temp:#if the dictionary has something append it to the list and then reset the dicitonary
-					action_list.append(temp)
-				temp = {}
-			temp[part1] = part2
-		action_list.append(temp)#catches the last dictionary
-		return action_list
-	
-	def split_actions(self, stringAction):
-		paired = 0
-		temp = ""
-		for char in stringAction:
-			if char == "\"":
-				paired+=1
-				char = ""
-			if char == "[" or char =="]" or char == '{' or char == '}':
-				char = ""
-			if paired > 1:
-				paired = 0
-			if char == "," and paired == 1:
-				char = "*"#using * as a temporary comma so later on it can be changed back to a comma easily
-			temp = temp+char
-		return temp.split(',')	
 
 	def set_alignment(self,labels,values):
 		position = 0
@@ -134,9 +168,9 @@ class monster:
 		for label in labels:
 			if label == "Type":
 				temp = values[position]
-				self.alignment = temp
+				self.type = temp
 			position += 1
-		#print(temp)
+		#print("Type: "+self.type)
 		return
 
 	def set_attributes(self,labels,values):
@@ -195,7 +229,7 @@ class monster:
 		position = 0
 		for label in labels:
 			if label == "Attacks":
-				#print(values[position])
+				print(values[position])
 				self.attacks["Attacks"] = values[position]
 			position+=1
 		#print(self.attacks)
@@ -252,7 +286,6 @@ class monster:
 		temp = ""
 		for label in labels:
 			if label == "Traits":
-				self.traits = values[position]
 				temp = values[position]
 				self.traits = self.format_actions(temp)
 				#self.print_action(self.traits, "Traits: ")	
@@ -271,23 +304,55 @@ class monster:
 		temp = ""
 		for label in labels:
 			if label == "Legendary Actions":
-				self.legendary_actions = values[position]
-				self.legendary_actions = self.format_actions(self.legendary_actions)
+				temp = values[position]
+				self.legendary_actions = self.format_actions(temp)
 				#self.print_action(self.legendary_actions, "Legendary Actions: ")
 			position+=1
-
-
-j = scrapper.javascriptScrapper()
-j.scrape()
-print(len(j.links))
-for link in j.links:
+def main():
+	success = True
+	loaded = False
+	monster_guide =[]
 	try:
-		s = scrapper.htmlScrapper()
-		s.start_scrape(link)
-		m = monster()
-		m.set_values(s.name, s.attributeNames, s.attributeValues)
-		monster_guide.append(m)
+		open_file = open('pickled_monsters.pickle', 'rb')
+		monster_guide = pickle.load(open_file)
+		loaded = True
 	except:
-		print(" ")
+		print("Failed to load pickled monsters")
+	else:
+		open_file.close()
 
-print(len(monster_guide))
+	if loaded == False:
+		j = scrapper.javascriptScrapper()
+		j.scrape()
+		s = scrapper.htmlScrapper()
+		print(len(j.links))
+		for i in range(len(j.links)):
+			try:
+				s.start_scrape(j.links[i])
+				m = monster()
+				m.set_values(s.name, s.attributeNames, s.attributeValues)
+				monster_guide.append(m)
+			except:
+				print("Failed: {}".format(j.links[i]))
+				success = False
+		print(len(monster_guide))
+
+	if success == True and loaded == False:
+		try:
+			new_file = open('pickled_monsters.pickle', 'wb')
+			pickle.dump(monster_guide, new_file)
+		except:
+			print("Failed to pickle the object")
+			raise
+		else:
+			new_file.close()
+	print("Monster Guide is completed")
+	counter = 0
+	for monster in monster_guide:
+		print(monster.name)
+		counter+=1
+	print("Monster Guide contains: {}".format(counter))
+
+main()
+
+
